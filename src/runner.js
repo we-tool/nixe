@@ -1,9 +1,8 @@
-/* global $dirname */
 import { app, BrowserWindow } from 'electron'
 import { join } from 'path'
 import ipc from './ipc'
 
-
+const distDir = __dirname
 const parent = ipc(process)
 
 // process.on('uncaughtException', (e) => {
@@ -15,7 +14,7 @@ app.on('ready', () => {
   const win = new BrowserWindow({
     show: true,
     webPreferences: {
-      preload: join($dirname, 'preload.js'),
+      preload: join(distDir, 'preload.js'),
       nodeIntegration: false,
     },
   })

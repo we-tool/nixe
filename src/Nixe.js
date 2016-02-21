@@ -1,14 +1,15 @@
-/* global $dirname */
 import { spawn } from 'child_process'
 import { join } from 'path'
 import ipc from './ipc'
+
+const distDir = __dirname
 
 
 export default class Nixe {
 
   constructor(options = {}) {
     const { electronPath } = options
-    const runner = join($dirname, 'runner.js')
+    const runner = join(distDir, 'runner.js')
     const electronArgs = {}
     this.proc = spawn(
       electronPath || require('electron-prebuilt'),

@@ -9,9 +9,12 @@ module.exports = {
   target: 'node',
   // target: 'electron',
 
-  // node: {
-  //   __dirname: true
-  // },
+  // https://webpack.github.io/docs/configuration.html#node
+  // https://github.com/webpack/webpack/issues/1599
+  node: {
+    __dirname: false,
+    __filename: false,
+  },
 
   // context: __dirname,
 
@@ -57,7 +60,7 @@ module.exports = {
     new webpack.NoErrorsPlugin(),
     new webpack.DefinePlugin({
       // rootDir: `"${resolve(__dirname, '..')}"`,
-      $dirname: '__dirname',
+      // $dirname: '__dirname',
     }),
   ],
 }
