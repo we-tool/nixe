@@ -29,7 +29,7 @@ function ipc(process) {
 
   process.on('message', function(data) {
     // emit.apply(emitter, sliced(data));
-    emit.apply(emitter, ...data);
+    emit.apply(emitter, [...data]);
   });
 
   emitter.emit = function() {

@@ -30,6 +30,10 @@ export default class Nixe {
     process.on('SIGQUIT', end)
     process.on('SIGHUP', end)
     process.on('SIGBREAK', end)
+
+    this.child.on('uncaughtException', (info = '') => {
+      console.error('runner uncaughtException:', info.replace(/\n/g, '\n  '))
+    })
   }
 
   end() {
