@@ -5,6 +5,10 @@ import ipc from './ipc'
 const distDir = __dirname
 const parent = ipc(process)
 
+console.log = (...args) => {
+  parent.emit('runner:log', ...args)
+}
+
 process.on('uncaughtException', (e) => {
   parent.emit('uncaughtException', e.stack || e.toString())
 })
@@ -50,7 +54,43 @@ app.on('ready', () => {
     win.webContents.loadURL(url)
   })
 
-  parent.on('js', (code) => {
+  parent.on('execute', (str) => {
+    const code = `
+      'use strict'
+      ;(() => {
+        try {
+          ${str}
+          __nixe.ipc.send('execute:res')
+        } catch (e) {
+          // todo: ask for electron ipc support with error objs?
+          __nixe.ipc.send('execute:res', e.stack || e.message)
+        }
+      })()
+    `
+    ipcMain.once('execute:res', (event, errm) => {
+      parent.emit('execute:res', errm)
+    })
+    win.webContents.executeJavaScript(code)
+  })
+
+  parent.on('evaluate', (fnstr, ...args) => {
+    const code = `
+      'use strict'
+      ;(() => {
+        try {
+          // note: break the $-{} in template string
+          // const res = ($-{String(fnstr)})($-{args.map(JSON.stringify).join(', ')})
+          const res = (${fnstr})(${JSON.stringify(args).slice(1, -1)})
+          __nixe.ipc.send('evaluate:res', null, res)
+        } catch (e) {
+          __nixe.ipc.send('evaluate:res', e.stack || e.message)
+        }
+      })()
+    `
+    parent.emit('runner:log', 'code', code)
+    ipcMain.once('evaluate:res', (event, errm, res) => {
+      parent.emit('evaluate:res', errm, res)
+    })
     win.webContents.executeJavaScript(code)
   })
 

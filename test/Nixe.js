@@ -1,5 +1,6 @@
 
 import Nixe from '../src/Nixe'
+import assert from 'assert'
 
 
 describe('Nixe', function () {
@@ -18,7 +19,17 @@ describe('Nixe', function () {
       child.emit('goto', 'https://www.baidu.com')
 
       child.once('win:did-finish-load', () => {
-        child.emit('js', 'alert(123)')
+        // nixe.execute('alert(123)', (errm) => {
+        //   done(errm)
+        // })
+        nixe.evaluate((b) => {
+          const a = 1 + b
+          return a
+        }, (errm, res) => {
+          assert.equal(errm, null)
+          assert.equal(res, 3)
+          done(errm)
+        }, 2)
       })
     })
   })

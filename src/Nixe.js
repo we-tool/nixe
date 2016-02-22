@@ -34,11 +34,26 @@ export default class Nixe {
     this.child.on('uncaughtException', (info = '') => {
       console.error('runner uncaughtException:', info.replace(/\n/g, '\n  '))
     })
+
+    this.child.on('runner:log', (...args) => {
+      console.log('runner:log', ...args)
+    })
   }
 
   end() {
     if (this.proc.connected) this.proc.disconnect()
     this.proc.kill()
+  }
+
+  execute(str, done) {
+    this.child.emit('execute', str)
+    this.child.once('execute:res', done || function () {})
+  }
+
+  evaluate(fn, done, ...args) {
+    // note: ipc cannot pass functions directly
+    this.child.emit('evaluate', String(fn), ...args)
+    this.child.once('evaluate:res', done || function () {})
   }
 
 }
