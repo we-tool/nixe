@@ -21,5 +21,9 @@
     "eslint-loader": "^1.3.0",
     "webpack": "^1.12.13",
     "webpack-notifier": "^1.2.1"
+  },
+  "dependencies": {
+    "babel-polyfill": "^6.5.0",
+    "bluebird": "^3.3.1"
   }
 }

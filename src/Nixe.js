@@ -38,6 +38,8 @@ export default class Nixe {
     this.child.on('runner:log', (...args) => {
       console.log('runner:log', ...args)
     })
+
+    this.tasks = []
   }
 
   end() {
@@ -45,15 +47,59 @@ export default class Nixe {
     this.proc.kill()
   }
 
-  execute(str, done) {
-    this.child.emit('execute', str)
-    this.child.once('execute:res', done || function () {})
+  queue(task) {
+    this.tasks.push(task) // async fn
+    return this
   }
 
-  evaluate(fn, done, ...args) {
-    // note: ipc cannot pass functions directly
-    this.child.emit('evaluate', String(fn), ...args)
-    this.child.once('evaluate:res', done || function () {})
+  async run() {
+    while (this.tasks.length) {
+      const task = this.tasks.shift()
+      await task()
+    }
+    return this // todo: decorator?
   }
 
+  goto(url) {
+    this.queue(() => new Promise((res, rej) => {
+      const done = (errc, errd) => {
+        if (errc) rej(`${errc}: ${errd}`)
+        else res()
+        // note: parallel event listening should be removed
+        this.child.removeListener('win:dom-ready', done)
+        this.child.removeListener('win:did-finish-load', done)
+      }
+      this.child.emit('goto', url)
+      this.child.once('win:dom-ready', () => done())
+      this.child.once('win:did-finish-load', done)
+    }))
+    return this
+  }
+
+  execute(str, _done) {
+    this.queue(() => new Promise((res, rej) => {
+      const done = (errm) => {
+        if (_done) _done(errm)
+        if (errm) rej(errm)
+        else res()
+      }
+      this.child.emit('execute', str)
+      this.child.once('execute:done', done)
+    }))
+    return this
+  }
+
+  evaluate(fn, _done, ...args) {
+    this.queue(() => new Promise((res, rej) => {
+      const done = (errm, result) => {
+        if (_done) _done(errm, result)
+        if (errm) rej(errm)
+        else res(result)
+      }
+      // note: ipc cannot pass functions directly
+      this.child.emit('evaluate', String(fn), ...args)
+      this.child.once('evaluate:done', done)
+    }))
+    return this
+  }
 }

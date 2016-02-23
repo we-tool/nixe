@@ -40,7 +40,7 @@ app.on('ready', () => {
     'plugin-crashed',
     'destroyed',
   ].forEach((key) => {
-    win.webContents.on(key, (...args) => {
+    win.webContents.on(key, (event, ...args) => {
       parent.emit(`win:${key}`, ...args)
     })
   })
@@ -60,15 +60,15 @@ app.on('ready', () => {
       ;(() => {
         try {
           ${str}
-          __nixe.ipc.send('execute:res')
+          __nixe.ipc.send('execute:done')
         } catch (e) {
           // todo: ask for electron ipc support with error objs?
-          __nixe.ipc.send('execute:res', e.stack || e.message)
+          __nixe.ipc.send('execute:done', e.stack || e.message)
         }
       })()
     `
-    ipcMain.once('execute:res', (event, errm) => {
-      parent.emit('execute:res', errm)
+    ipcMain.once('execute:done', (event, errm) => {
+      parent.emit('execute:done', errm)
     })
     win.webContents.executeJavaScript(code)
   })
@@ -79,21 +79,20 @@ app.on('ready', () => {
       ;(() => {
         try {
           // note: break the $-{} in template string
-          // const res = ($-{String(fnstr)})($-{args.map(JSON.stringify).join(', ')})
-          const res = (${fnstr})(${JSON.stringify(args).slice(1, -1)})
-          __nixe.ipc.send('evaluate:res', null, res)
+          // const result = ($-{String(fnstr)})($-{args.map(JSON.stringify).join(', ')})
+          const result = (${fnstr})(${JSON.stringify(args).slice(1, -1)})
+          __nixe.ipc.send('evaluate:done', null, result)
         } catch (e) {
-          __nixe.ipc.send('evaluate:res', e.stack || e.message)
+          __nixe.ipc.send('evaluate:done', e.stack || e.message)
         }
       })()
     `
-    parent.emit('runner:log', 'code', code)
-    ipcMain.once('evaluate:res', (event, errm, res) => {
-      parent.emit('evaluate:res', errm, res)
+    ipcMain.once('evaluate:done', (event, errm, result) => {
+      parent.emit('evaluate:done', errm, result)
     })
     win.webContents.executeJavaScript(code)
   })
 
-  parent.emit('ready')
+  parent.emit('app:ready')
 
 })

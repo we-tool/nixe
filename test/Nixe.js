@@ -7,31 +7,37 @@ describe('Nixe', function () {
 
   this.timeout(Infinity)
 
-  it('constructs', (done) => {
-    const nixe = new Nixe()
-    const { child } = nixe
+  let nixe
 
-    child.on('web', (type, ...data) => {
+  it('should construct', (done) => {
+    nixe = new Nixe()
+    nixe.child.once('app:ready', done) //fixme
+  })
+
+  it('should open url', (done) => {
+    nixe.child.on('web', (type, ...data) => { //fixme
       console.log(type, ...data)
     })
 
-    child.once('ready', () => {
-      child.emit('goto', 'https://www.baidu.com')
+    nixe.goto('https://www.baidu.com').run()
+    nixe.child.once('win:did-finish-load', done) //fixme
+  })
 
-      child.once('win:did-finish-load', () => {
-        // nixe.execute('alert(123)', (errm) => {
-        //   done(errm)
-        // })
-        nixe.evaluate((b) => {
-          const a = 1 + b
-          return a
-        }, (errm, res) => {
-          assert.equal(errm, null)
-          assert.equal(res, 3)
-          done(errm)
-        }, 2)
-      })
-    })
+  it('should execute', (done) => {
+    nixe.execute('alert(123)', (errm) => {
+      done(errm)
+    }).run()
+  })
+
+  it('should evaluate', (done) => {
+    nixe.evaluate((b) => {
+      const a = 1 + b
+      return a
+    }, (errm, res) => {
+      assert.equal(errm, null)
+      assert.equal(res, 3)
+      done(errm)
+    }, 2).run()
   })
 
 })
