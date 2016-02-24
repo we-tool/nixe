@@ -22,7 +22,19 @@ $ npm install nixe
 
 ```js
 import Nixe from 'nixe'
-const nixe = new Nixe()
+
+new Nixe().ready()
+  .goto('https://www.yahoo.com')
+  .execute('alert(123)')
+  .queue(async () => {
+    console.log('done')
+  })
+  .run()
+
+const title = new Nixe().ready()
+  .goto('https://www.baidu.com')
+  .evaluate(() => document.title)
+  .run()
 ```
 
 

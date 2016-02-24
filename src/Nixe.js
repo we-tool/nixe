@@ -57,10 +57,15 @@ export default class Nixe {
   }
 
   async run() {
+    let result // last result
     while (this.tasks.length) {
       const task = this.tasks.shift()
-      await task()
+      result = await task() // should be a promise
+      // or would have
+      // Unhandled rejection TypeError:
+      // A value undefined was yielded that could not be treated as a promise
     }
+    return result
   }
 
   ready() {
@@ -85,23 +90,23 @@ export default class Nixe {
     }))
   }
 
-  execute(str, _done) {
+  execute(str) {
     return this.queue(() => new Promise((res, rej) => {
-      const done = (errm) => {
-        if (_done) _done(errm)
+      const done = (errm, result) => {
         if (errm) rej(errm)
-        else res()
+        else res(result)
       }
       this.child.emit('execute', str)
       this.child.once('execute:done', done)
     }))
   }
 
-  evaluate(fn, _done, ...args) {
+  evaluate(fn, ...args) {
     return this.queue(() => new Promise((res, rej) => {
       const done = (errm, result) => {
-        if (_done) _done(errm, result)
         if (errm) rej(errm)
+        // note: NaN becomes 0 via ipc
+        // null/undefined becomes null
         else res(result)
       }
       // note: ipc cannot pass functions directly

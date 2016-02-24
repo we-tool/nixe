@@ -59,16 +59,19 @@ app.on('ready', () => {
       'use strict'
       ;(() => {
         try {
-          ${str}
-          __nixe.ipc.send('execute:done')
+          // fixme: but performance (eval)..?
+          // note: should also catch syntax error, eg. alert(123
+          // $-{str}
+          const result = eval(${JSON.stringify(str)})
+          __nixe.ipc.send('execute:done', null, result)
         } catch (e) {
           // todo: ask for electron ipc support with error objs?
           __nixe.ipc.send('execute:done', e.stack || e.message)
         }
       })()
     `
-    ipcMain.once('execute:done', (event, errm) => {
-      parent.emit('execute:done', errm)
+    ipcMain.once('execute:done', (event, ...args) => {
+      parent.emit('execute:done', ...args)
     })
     win.webContents.executeJavaScript(code)
   })
@@ -78,17 +81,21 @@ app.on('ready', () => {
       'use strict'
       ;(() => {
         try {
+          // fixme: but performance (eval)..?
+          // note: should also catch syntax error, eg. alert(123
           // note: break the $-{} in template string
           // const result = ($-{String(fnstr)})($-{args.map(JSON.stringify).join(', ')})
-          const result = (${fnstr})(${JSON.stringify(args).slice(1, -1)})
+          // const result = ($-{fnstr})($-{JSON.stringify(args).slice(1, -1)})
+          const fn = eval(${JSON.stringify(`(${fnstr})`)})
+          const result = fn(${JSON.stringify(args).slice(1, -1)})
           __nixe.ipc.send('evaluate:done', null, result)
         } catch (e) {
           __nixe.ipc.send('evaluate:done', e.stack || e.message)
         }
       })()
     `
-    ipcMain.once('evaluate:done', (event, errm, result) => {
-      parent.emit('evaluate:done', errm, result)
+    ipcMain.once('evaluate:done', (event, ...args) => {
+      parent.emit('evaluate:done', ...args)
     })
     win.webContents.executeJavaScript(code)
   })
