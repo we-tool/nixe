@@ -8,22 +8,23 @@ install()
 
 describe('Nixe', function () {
 
-  this.timeout(Infinity)
+  this.timeout(25000)
 
   let nixe
 
-  it('should construct', (done) => {
+  it('should construct', () => {
     nixe = new Nixe()
-    nixe.child.once('app:ready', done) //fixme
-  })
-
-  it('should open url', (done) => {
     nixe.child.on('web', (type, ...data) => { //fixme
       console.log(type, ...data)
     })
+  })
 
-    nixe.goto('https://www.baidu.com').run()
-    nixe.child.once('win:did-finish-load', done) //fixme
+  it('should get ready', async () => {
+    await nixe.ready().run()
+  })
+
+  it('should open url', async () => {
+    await nixe.goto('https://www.baidu.com').run()
   })
 
   it('should execute', async () => {
@@ -47,7 +48,10 @@ describe('Nixe', function () {
   })
 
   it('should queue up', async () => {
-    await nixe.goto('https://www.baidu.com')
+    nixe.end()
+    nixe = new Nixe()
+    await nixe.ready()
+      .goto('https://www.baidu.com')
       .execute('alert(123)', (errm) => {
         assert.equal(errm, null)
       })

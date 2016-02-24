@@ -39,6 +39,10 @@ export default class Nixe {
       console.log('runner:log', ...args)
     })
 
+    this.child.once('app:ready', () => {
+      this.appReady = true
+    })
+
     this.tasks = []
   }
 
@@ -54,12 +58,20 @@ export default class Nixe {
 
   async run() {
     while (this.tasks.length) {
-      await this.tasks.shift()
+      const task = this.tasks.shift()
+      await task()
     }
   }
 
+  ready() {
+    return this.queue(() => new Promise((res) => {
+      if (this.appReady) return res()
+      this.child.once('app:ready', res)
+    }))
+  }
+
   goto(url) {
-    return this.queue(new Promise((res, rej) => {
+    return this.queue(() => new Promise((res, rej) => {
       const done = (errc, errd) => {
         if (errc) rej(`${errc}: ${errd}`)
         else res()
@@ -74,7 +86,7 @@ export default class Nixe {
   }
 
   execute(str, _done) {
-    return this.queue(new Promise((res, rej) => {
+    return this.queue(() => new Promise((res, rej) => {
       const done = (errm) => {
         if (_done) _done(errm)
         if (errm) rej(errm)
@@ -86,7 +98,7 @@ export default class Nixe {
   }
 
   evaluate(fn, _done, ...args) {
-    return this.queue(new Promise((res, rej) => {
+    return this.queue(() => new Promise((res, rej) => {
       const done = (errm, result) => {
         if (_done) _done(errm, result)
         if (errm) rej(errm)
