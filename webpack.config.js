@@ -58,6 +58,9 @@ module.exports = {
     // new NpmInstallPlugin({ save: true }),
     new NotifierPlugin({ alwaysNotify: true }),
     new webpack.NoErrorsPlugin(),
+    new webpack.ProvidePlugin({
+      Promise: 'bluebird',
+    }),
     new webpack.DefinePlugin({
       // rootDir: `"${resolve(__dirname, '..')}"`,
       // $dirname: '__dirname',

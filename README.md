@@ -8,6 +8,7 @@ Heavily inspired by [nightmare][1]
 ## Compared to Nightmare
 
 - [x] ES2015+ Build System
+- [x] Async/Await Style
 - [x] Simpler Codebase
 - [ ] Seamless Access to Electron Objects
 
@@ -51,7 +52,7 @@ $ npm test
 ## Chinese Mirror for Electron
 
 ```plain
-ELECTRON_MIRROR="https://npm.taobao.org/mirrors/electron/"
+ELECTRON_MIRROR=https://npm.taobao.org/mirrors/electron/
 ```
 
 
