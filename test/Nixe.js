@@ -1,9 +1,6 @@
 
-import { install } from 'mocha-generators'
+import should from 'should'
 import Nixe from '../src/Nixe'
-import assert from 'assert'
-
-install()
 
 
 describe('Nixe', function () {
@@ -33,7 +30,7 @@ describe('Nixe', function () {
       // .execute('alert(123') // syntax error
       .execute('alert(123), 321')
       .run()
-    assert.equal(result, 321)
+    result.should.be.eql(321)
   })
 
   it('should evaluate', async () => {
@@ -43,7 +40,7 @@ describe('Nixe', function () {
         return a
       }, 2)
       .run()
-    assert.equal(result, 3)
+    result.should.be.eql(3)
   })
 
   it('should queue up', async () => {
@@ -57,7 +54,7 @@ describe('Nixe', function () {
         return a
       }, 2)
       .run()
-    assert.equal(result, 3)
+    result.should.be.eql(3)
   })
 
   it('should queue promise fn', async () => {
@@ -72,18 +69,18 @@ describe('Nixe', function () {
     const result = await nixe
       .queue(async () => 6 / 3)
       .run()
-    assert.equal(result, 2)
+    result.should.be.eql(2)
   })
 
   // note: NaN becomes 0 via ipc
   // null/undefined becomes null
   it('ipc: NaN => 0, null/undefined => null', async () => {
     let result = await nixe.evaluate(() => NaN).run()
-    assert.strictEqual(result, 0)
+    result.should.be.eql(0)
     result = await nixe.evaluate(() => null).run()
-    assert.strictEqual(result, null)
+    should(result).be.null()
     result = await nixe.evaluate(() => undefined).run()
-    assert.strictEqual(result, null)
+    should(result).be.null()
   })
 
   it('should do baidu search', async () => {
@@ -100,7 +97,6 @@ describe('Nixe', function () {
       }))
       .evaluate(() => document.title)
       .run()
-    assert.equal(title, 'nixe_百度搜索')
+    title.should.be.eql('nixe_百度搜索')
   })
-
 })
