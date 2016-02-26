@@ -1,5 +1,7 @@
 # nixe
 
+[![Join the chat at https://gitter.im/fritx/nixe](https://badges.gitter.im/fritx/nixe.svg)](https://gitter.im/fritx/nixe?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 Another high-level browser automation library.
 
 Heavily inspired by [nightmare][1]
