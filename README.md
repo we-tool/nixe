@@ -32,10 +32,21 @@ new Nixe().ready()
   })
   .run()
 
-const title = new Nixe().ready()
+new Nixe().ready()
   .goto('https://www.baidu.com')
   .evaluate(() => document.title)
-  .run()
+  .then((title) => {
+    console.log(title)
+  })
+
+// or async/await style
+;(async () => {
+  const title = await new Nixe().ready()
+    .goto('https://www.baidu.com')
+    .evaluate(() => document.title)
+    .run()
+  console.log(title)
+})()
 ```
 
 

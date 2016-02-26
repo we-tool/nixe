@@ -58,7 +58,8 @@ export default class Nixe {
 
   async run() {
     let result // last result
-    while (this.tasks.length) {
+    let left = this.tasks.length // tasks to run
+    while (left--) {
       const task = this.tasks.shift()
       result = await task() // should be a promise
       // or would have

@@ -2,7 +2,8 @@
 import should from 'should'
 import Nixe from '../src/Nixe'
 
-
+// todo: request the self-started server
+// to fix the request limit by other online sites
 describe('Nixe', function () {
 
   this.timeout(25000)
@@ -70,6 +71,22 @@ describe('Nixe', function () {
       .queue(async () => 6 / 3)
       .run()
     result.should.be.eql(2)
+  })
+
+  it('should run the pre-set tasks', async () => {
+    nixe.end()
+    nixe = new Nixe()
+    let result = 0
+    await nixe.ready()
+      .goto('http://blog.fritx.me')
+      .queue(async () => {
+        result = 1
+        nixe.queue(async () => {
+          result = 2
+        })
+      })
+      .run()
+    result.should.be.eql(1)
   })
 
   // note: NaN becomes 0 via ipc
