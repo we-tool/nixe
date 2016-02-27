@@ -27,27 +27,22 @@ $ npm install nixe
 import Nixe from 'nixe'
 
 new Nixe().ready()
-  .goto('https://www.yahoo.com')
+  .goto('https://www.baidu.com')
   .execute('alert(123)')
-  .queue(async () => {
-    console.log('done')
-  })
+  .queue(async () => 333)
   .run()
 
+// `run` is optional with await/then style
 new Nixe().ready()
   .goto('https://www.baidu.com')
   .evaluate(() => document.title)
-  .then((title) => {
-    console.log(title)
-  })
+  .then((title) => {})
 
 // or async/await style
 ;(async () => {
   const title = await new Nixe().ready()
     .goto('https://www.baidu.com')
     .evaluate(() => document.title)
-    .run()
-  console.log(title)
 })()
 ```
 

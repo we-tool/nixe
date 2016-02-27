@@ -7,6 +7,7 @@ const distDir = __dirname
 
 export default class Nixe {
 
+  // todo: static/instance config
   constructor(options = {}) {
     const { electronPath } = options
     const runner = join(distDir, 'runner.js')
@@ -61,12 +62,22 @@ export default class Nixe {
     let left = this.tasks.length // tasks to run
     while (left--) {
       const task = this.tasks.shift()
-      result = await task() // should be a promise
+      result = await task(result) // should be a promise
       // or would have
       // Unhandled rejection TypeError:
       // A value undefined was yielded that could not be treated as a promise
     }
     return result
+  }
+
+  // work as a "promise" ifself
+  // make `run` optional
+  async then(res, rej) {
+    return new Promise((_res, _rej) => {
+      this.run().then(_res, _rej)
+    })
+    .then(res)
+    .catch(rej)
   }
 
   ready() {
