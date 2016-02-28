@@ -5,7 +5,8 @@
   "scripts": {
     "build": "webpack --progress",
     "dev": "webpack -w --progress",
-    "test": "mocha dist/test"
+    "test": "mocha dist/test",
+    "test-cov": "istanbul cover _mocha -- dist/test"
   },
   "devDependencies": {
     "babel-core": "^6.5.2",

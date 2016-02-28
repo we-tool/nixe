@@ -77,6 +77,9 @@ app.on('ready', () => {
   })
 
   parent.on('evaluate', (fnstr, ...args) => {
+    // note: deal with istanbul
+    // https://github.com/gotwarlost/istanbul/issues/310
+    fnstr = fnstr.replace(/__cov_(.+?)\+\+;/g, '')
     const code = `
       'use strict'
       ;(() => {
