@@ -16,7 +16,7 @@ process.on('uncaughtException', (e) => {
 app.on('ready', () => {
 
   const win = new BrowserWindow({
-    // show: false,
+    show: false,
     webPreferences: {
       preload: join(distDir, 'preload.js'),
       nodeIntegration: false,

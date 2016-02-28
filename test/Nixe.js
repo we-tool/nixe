@@ -6,7 +6,7 @@ import Nixe from '../src/Nixe'
 // to fix the request limit by other online sites
 describe('Nixe', function () {
 
-  this.timeout(25000)
+  this.timeout(180000)
 
   let nixe
 
