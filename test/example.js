@@ -14,7 +14,7 @@ describe('examples', function () {
 
   it('should work #1', async () => {
     nixe = new Nixe()
-    const result await nixe.ready()
+    const result = await nixe.ready()
       .goto('https://www.baidu.com')
       .execute('alert(123)')
       .queue(async () => 333)

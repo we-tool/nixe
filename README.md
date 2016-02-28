@@ -1,6 +1,6 @@
 # nixe
 
-[![Join the chat at https://gitter.im/fritx/nixe](https://badges.gitter.im/fritx/nixe.svg)](https://gitter.im/fritx/nixe?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Join the chat at https://gitter.im/fritx/nixe](https://badges.gitter.im/fritx/nixe.svg)](https://gitter.im/fritx/nixe?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)&nbsp;&nbsp;[![Circle CI](https://circleci.com/gh/fritx/nixe/tree/dev.svg?style=svg)](https://circleci.com/gh/fritx/nixe/tree/dev)
 
 Another high-level browser automation library.
 
