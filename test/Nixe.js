@@ -29,12 +29,40 @@ describe('Nixe', function () {
     await nixe.goto('https://www.baidu.com')
   })
 
+  it('should open url and capture error', async () => {
+    let errm
+    try {
+      await nixe.goto('xxx-:sdf7&*F(DH')
+    } catch (m) { errm = m }
+    errm.should.eql('-3: ')
+  })
+
   it('should execute', async () => {
     const result = await nixe
-      // .execute('throw new Error(1)') // thrown error
-      // .execute('alert(123') // syntax error
+      .execute('console.log(1)')
+      // .execute('console.info(1)')
+      .execute('console.warn(1)')
+      .execute('console.error(1)')
+      .execute('confirm(123)')
+      .execute('prompt(123)')
       .execute('alert(123), 321')
     result.should.be.eql(321)
+  })
+
+  it('should execute and capture thrown error', async () => {
+    let errm
+    try {
+      await nixe.execute('throw new Error(321)') // thrown error
+    } catch (m) { errm = m }
+    errm.should.be.match(/^Error: 321/)
+  })
+
+  it('should execute and capture syntax error', async () => {
+    let errm
+    try {
+      await nixe.execute('alert(123') // syntax error
+    } catch (m) { errm = m }
+    errm.should.be.match(/^SyntaxError: missing/)
   })
 
   it('should evaluate', async () => {
