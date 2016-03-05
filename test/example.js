@@ -4,7 +4,7 @@ import Nixe from '../src/Nixe'
 
 describe('examples', function () {
 
-  this.timeout(180000)
+  this.timeout(300000)
 
   let nixe
 
