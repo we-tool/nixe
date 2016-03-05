@@ -26,8 +26,7 @@ describe('Nixe', function () {
   })
 
   it('should open url', async () => {
-    // await nixe.goto('about:blank') // can not pass ci
-    await nixe.goto('https://www.baidu.com/')
+    await nixe.goto('about:blank')
   })
 
   // can not pass ci
