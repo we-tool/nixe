@@ -79,7 +79,7 @@ app.on('ready', () => {
   parent.on('evaluate', (fnstr, ...args) => {
     // note: deal with istanbul
     // https://github.com/gotwarlost/istanbul/issues/310
-    fnstr = fnstr.replace(/__cov_(.+?)\+\+;/g, '')
+    fnstr = fnstr.replace(/__cov_(.+?)\+\+;?/g, '')
     const code = `
       'use strict'
       ;(() => {
@@ -99,6 +99,46 @@ app.on('ready', () => {
     `
     ipcMain.once('evaluate:done', (event, ...args) => {
       parent.emit('evaluate:done', ...args)
+    })
+    win.webContents.executeJavaScript(code)
+  })
+
+  // note: 9e20/365/24/60/60/1000=28538812785.38813, for Infinity
+  // but not `Infinity`
+  parent.on('loop', (fnstr, interval = 200, timeout = 9e20) => {
+    fnstr = fnstr.replace(/__cov_(.+?)\+\+;?/g, '')
+    const code = `
+      'use strict'
+      ;(() => {
+        let fn
+        try {
+          fn = eval(${JSON.stringify(`(${fnstr})`)})
+        } catch (e) {
+          __nixe.ipc.send('loop:done', e.stack || e.message)
+        }
+        const id1 = setInterval(exec, ${interval})
+        const id2 = setTimeout(() => {
+          __nixe.ipc.send('loop:done', 'loop:timeout')
+          clearInterval(id1)
+        }, ${timeout == null ? 9e20 : timeout})
+        exec()
+        function exec() {
+          try {
+            // const result = fn($-{JSON.stringify(args).slice(1, -1)})
+            const result = fn()
+            if (result) {
+              __nixe.ipc.send('loop:done')
+              clearInterval(id1)
+              clearTimeout(id2)
+            }
+          } catch (e) {
+            __nixe.ipc.send('loop:done', e.stack || e.message)
+          }
+        }
+      })()
+    `
+    ipcMain.once('loop:done', (event, ...args) => {
+      parent.emit('loop:done', ...args)
     })
     win.webContents.executeJavaScript(code)
   })

@@ -126,4 +126,18 @@ export default class Nixe {
       this.child.once('evaluate:done', done)
     }))
   }
+
+  // note: dont use `Infinity`(=0) with setTimeout
+  // use null for Infinity instead
+  // also Infinity becomes null via ipc
+  loop(fn, interval, timeout) {
+    return this.queue(() => new Promise((res, rej) => {
+      const done = (errm) => {
+        if (errm) rej(errm)
+        else res()
+      }
+      this.child.emit('loop', String(fn), interval, timeout)
+      this.child.once('loop:done', done)
+    }))
+  }
 }

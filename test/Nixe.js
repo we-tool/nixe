@@ -180,6 +180,8 @@ describe('Nixe', function () {
     should(result).be.null()
   })
 
+  // todo: test case for `loop`
+
   it('should do baidu search', async () => {
     nixe.end()
     nixe = new Nixe()
@@ -189,9 +191,12 @@ describe('Nixe', function () {
         window.kw.value = 'nixe'
         window.su.click()
       })
-      .queue(() => new Promise((res) => {
-        setTimeout(res, 2000) // todo: wait method
-      }))
+      // .queue(() => new Promise((res) => {
+      //   setTimeout(res, 2000) // todo: wait method
+      // }))
+      .loop(() => {
+        return !!window.content_left
+      }, 500)
       .evaluate(() => document.title)
     title.should.be.eql('nixe_百度搜索')
   })
