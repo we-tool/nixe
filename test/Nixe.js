@@ -36,6 +36,12 @@ describe('Nixe', function () {
   //   errm.should.eql('-3: ')
   // })
 
+  it('should wait', async () => {
+    const t = Date.now()
+    await nixe.wait(1000)
+    Math.abs(Date.now() - t).should.be.below(1010)
+  })
+
   it('should execute', async () => {
     const result = await nixe
       .execute('console.log(1)')

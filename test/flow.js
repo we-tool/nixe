@@ -1,5 +1,5 @@
 
-import should from 'should'
+import 'should'
 import Nixe from '../src/Nixe'
 
 // todo: request the self-started server

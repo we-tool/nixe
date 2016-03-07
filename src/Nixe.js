@@ -102,6 +102,12 @@ export default class Nixe {
     }))
   }
 
+  wait(delay) {
+    return this.queue(() => new Promise((res) => {
+      setTimeout(res, delay)
+    }))
+  }
+
   execute(str) {
     return this.queue(() => new Promise((res, rej) => {
       const done = (errm, result) => {
