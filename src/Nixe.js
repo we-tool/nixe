@@ -87,17 +87,21 @@ export default class Nixe {
     }))
   }
 
+  // note: if `dom-ready` is used instead of `did-finish-load`
+  // extra `goto` would cause "-3" thrown
   goto(url) {
     return this.queue(() => new Promise((res, rej) => {
       const done = (errc, errd) => {
         if (errc) rej(`${errc}: ${errd}`)
         else res()
         // note: parallel event listening should be removed
-        this.child.removeListener('win:dom-ready', done)
+        // this.child.removeListener('win:dom-ready', done)
+        this.child.removeListener('win:did-finish-load', done)
         this.child.removeListener('win:did-fail-load', done)
       }
       this.child.emit('goto', url)
-      this.child.once('win:dom-ready', () => done())
+      // this.child.once('win:dom-ready', () => done())
+      this.child.once('win:did-finish-load', () => done())
       this.child.once('win:did-fail-load', done)
     }))
   }
