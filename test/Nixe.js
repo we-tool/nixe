@@ -2,11 +2,9 @@
 import should from 'should'
 import Nixe from '../src/Nixe'
 
-// todo: request the self-started server
-// to fix the request limit by other online sites
 describe('Nixe', function () {
 
-  this.timeout(300000)
+  this.timeout(1000 * 60 * 2)
 
   let nixe
 
@@ -182,22 +180,4 @@ describe('Nixe', function () {
 
   // todo: test case for `loop`
 
-  it('should do baidu search', async () => {
-    nixe.end()
-    nixe = new Nixe()
-    const title = await nixe.ready()
-      .goto('https://www.baidu.com')
-      .evaluate(() => {
-        window.kw.value = 'nixe'
-        window.su.click()
-      })
-      // .queue(() => new Promise((res) => {
-      //   setTimeout(res, 2000) // todo: wait method
-      // }))
-      .loop(() => {
-        return !!window.content_left
-      }, 500)
-      .evaluate(() => document.title)
-    title.should.be.eql('nixe_百度搜索')
-  })
 })
