@@ -4,18 +4,21 @@ import Nixe from '../src/Nixe'
 
 describe('examples', function () {
 
-  this.timeout(300000)
+  this.timeout(1000 * 60)
 
   let nixe
 
-  after(() => {
+  beforeEach(() => {
+    nixe = new Nixe()
+  })
+
+  afterEach(() => {
     nixe.end()
   })
 
   it('should work #1', async () => {
-    nixe = new Nixe()
     const result = await nixe.ready()
-      .goto('https://www.baidu.com')
+      .goto('https://www.baidu.com/')
       .execute('alert(123)')
       .queue(async () => 333)
       .run()
@@ -23,10 +26,8 @@ describe('examples', function () {
   })
 
   it('should work #2', (done) => {
-    nixe.end()
-    nixe = new Nixe()
     nixe.ready()
-      .goto('https://www.baidu.com')
+      .goto('https://www.baidu.com/')
       .evaluate(() => document.title)
       .then((title) => {
         title.should.eql('百度一下，你就知道')
@@ -35,10 +36,8 @@ describe('examples', function () {
   })
 
   it('should work #3', async () => {
-    nixe.end()
-    nixe = new Nixe()
     const title = await nixe.ready()
-      .goto('https://www.baidu.com')
+      .goto('https://www.baidu.com/')
       .evaluate(() => document.title)
     title.should.eql('百度一下，你就知道')
   })

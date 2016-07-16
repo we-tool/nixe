@@ -15,7 +15,7 @@ describe('Nixe', function () {
   it('should construct', () => {
     nixe = new Nixe()
     nixe.child.on('web', (type, ...data) => { //fixme
-      console.log(type, ...data)
+      console.log(type, data)
     })
   })
 

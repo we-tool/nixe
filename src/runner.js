@@ -15,6 +15,7 @@ process.on('uncaughtException', (e) => {
 
 app.on('ready', () => {
 
+  // todo: options to turn off?
   const win = new BrowserWindow({
     show: false,
     webPreferences: {
@@ -51,6 +52,7 @@ app.on('ready', () => {
   })
 
   parent.on('goto', (url) => {
+    // win.webContents.stop()
     win.webContents.loadURL(url)
   })
 

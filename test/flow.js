@@ -13,7 +13,7 @@ describe('flow', function () {
   beforeEach(() => {
     nixe = new Nixe()
     nixe.child.on('web', (type, ...data) => { //fixme
-      console.log(type, ...data)
+      console.log(type, data)
     })
   })
 

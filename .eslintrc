@@ -15,7 +15,7 @@
     "no-unused-vars": 1,
     "comma-dangle": [1, "always-multiline"],
     "array-bracket-spacing": [1, "never"],
-    "object-curly-spacing": 1,
-    "no-multiple-empty-lines": 1,
+    "object-curly-spacing": [1, "always"],
+    "no-multiple-empty-lines": [1, { max: 2 }],
   }
 }

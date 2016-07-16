@@ -72,12 +72,11 @@ export default class Nixe {
 
   // work as a "promise" ifself
   // make `run` optional
-  async then(res, rej) {
+  then(res, rej) {
     return new Promise((_res, _rej) => {
       this.run().then(_res, _rej)
     })
-    .then(res)
-    .catch(rej)
+    .then(res, rej)
   }
 
   ready() {

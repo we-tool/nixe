@@ -1,6 +1,6 @@
 # nixe
 
-[![Join the chat at https://gitter.im/fritx/nixe](https://badges.gitter.im/fritx/nixe.svg)](https://gitter.im/fritx/nixe?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)&nbsp;&nbsp;<a href="https://circleci.com/gh/fritx/nixe/tree/dev"><img width="73" height="20" src="https://circleci.com/gh/fritx/nixe/tree/dev.svg?style=svg"></a>
+<a href="https://gitter.im/fritx/nixe?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge"><img width="92" height="20" src="https://badges.gitter.im/fritx/nixe.svg"></a>&nbsp;&nbsp;<a href="https://circleci.com/gh/fritx/nixe/tree/dev"><img width="73" height="20" src="https://circleci.com/gh/fritx/nixe/tree/dev.svg?style=svg"></a>
 
 Another high-level browser automation library.
 
@@ -27,21 +27,21 @@ $ npm install nixe
 import Nixe from 'nixe'
 
 new Nixe().ready()
-  .goto('https://www.baidu.com')
+  .goto('https://www.baidu.com/')
   .execute('alert(123)')
   .queue(async () => 333)
   .run()
 
 // `run` is optional with await/then style
 new Nixe().ready()
-  .goto('https://www.baidu.com')
+  .goto('https://www.baidu.com/')
   .evaluate(() => document.title)
   .then((title) => {})
 
 // or async/await style
 ;(async () => {
   const title = await new Nixe().ready()
-    .goto('https://www.baidu.com')
+    .goto('https://www.baidu.com/')
     .evaluate(() => document.title)
 })()
 ```

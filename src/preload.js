@@ -16,7 +16,7 @@ window.addEventListener('error', function(e) {
   var defaultLog = console.log;
   console.log = function() {
     // __nixe.ipc.send('console', 'log', __nixe.sliced(arguments));
-    __nixe.ipc.send('web', 'console:log', Array.from(arguments));
+    __nixe.ipc.send('web', 'console:log', ...Array.from(arguments));
     return defaultLog.apply(this, arguments);
   };
 
@@ -24,7 +24,7 @@ window.addEventListener('error', function(e) {
   var defaultWarn = console.warn;
   console.warn = function() {
     // __nixe.ipc.send('console', 'warn', __nixe.sliced(arguments));
-    __nixe.ipc.send('web', 'console:warn', Array.from(arguments));
+    __nixe.ipc.send('web', 'console:warn', ...Array.from(arguments));
     return defaultWarn.apply(this, arguments);
   };
 
@@ -32,7 +32,7 @@ window.addEventListener('error', function(e) {
   var defaultError = console.error;
   console.error = function() {
     // __nixe.ipc.send('console', 'error', __nixe.sliced(arguments));
-    __nixe.ipc.send('web', 'console:error', Array.from(arguments));
+    __nixe.ipc.send('web', 'console:error', ...Array.from(arguments));
     return defaultError.apply(this, arguments);
   };
 
