@@ -8,11 +8,11 @@ const access = promisify(fs.access)
 
 describe('electron', () => {
 
-  it('electron-prebuilt should be installed', async () => {
-    await access('node_modules/electron-prebuilt')
+  it('electron should be installed', async () => {
+    await access('node_modules/electron')
   })
 
-  it('no `electron` should be installed', async () => {
-    access('node_modules/electron').should.be.rejected()
+  it('no `electron-prebuilt` should be installed', async () => {
+    access('node_modules/electron-prebuilt').should.be.rejected()
   })
 })

@@ -13,7 +13,7 @@ export default class Nixe {
     const runner = join(distDir, 'runner.js')
     const electronArgs = {}
     this.proc = spawn(
-      electronPath || require('electron-prebuilt'),
+      electronPath || require('electron'),
       [runner].concat(JSON.stringify(electronArgs)),
       { stdio: [null, null, null, 'ipc'] }
     )
